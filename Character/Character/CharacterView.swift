@@ -8,22 +8,18 @@
 
 import UIKit
 
-let PI = 3.14159265358979323846
-extension String{
-    // 转基本类型
-    func toInt() -> Int{
-        return NSString(string: self).integerValue
-    }
-    
-    func toCGFloat() -> CGFloat{
-        return CGFloat(NSString(string: self).integerValue)
-    }
-    
+enum PlayMode:Int {
+    case Auto = 0
+    case OneStoke = 1
 }
 
-
-class CharaterView: UIView {
-    var character:Charater!
+class  CharacterView: UIView {
+    var character:Character = Character(){
+        didSet{
+            debugPrint("didSet")
+            self.setNeedsDisplay()
+        }
+    }
     var strokeIndex = 0   //当前播放的笔画
     var pointIndex = 0     //当前播放点
     var smallStepIndex = 1 //当前播放的点之间的小步
@@ -31,40 +27,64 @@ class CharaterView: UIView {
     var cxt:CGContext!
     var displayLink:CADisplayLink!
     var bOpenSmallStepMode = false
+    var playMode = PlayMode.Auto
+    var isPlaying = false
     override init(frame: CGRect) {
         super.init(frame: frame)
-        backgroundColor = UIColor.whiteColor()
-        displayLink = CADisplayLink(target: self, selector: #selector(CharaterView.play))
-//        displayLink.frameInterval = 5
-        displayLink.addToRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
-        
     }
     
     required init?(coder aDecoder: NSCoder) {
-        fatalError("init(coder:) has not been implemented")
+        super.init(coder:aDecoder)
+        backgroundColor = UIColor.whiteColor()
+//        fatalError("init(coder:) has not been implemented")
+        displayLink = CADisplayLink(target: self, selector: #selector(CharacterView.play))
+        displayLink.addToRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
+        displayLink.paused = true
     }
+    
     override func drawRect(rect: CGRect) {
+        guard character.strokes.count > 0  else{
+            return
+        }
         if((self.cxt) == nil){
              self.cxt = UIGraphicsGetCurrentContext()
         }
+        CGContextScaleCTM(cxt, rect.size.width/CGFloat(character.size) ,  rect.size.height/CGFloat(character.size))
+    
         fillBackgroundCharacter()
         CGContextSaveGState(cxt)
-        fillStoke(strokeIndex)
-        CGContextRestoreGState(cxt)
-        if(strokeIndex == character.strokes.count){
-            displayLink.invalidate()
+        if(isPlaying){
+            fillStoke(strokeIndex)
+            CGContextRestoreGState(cxt)
+            if(strokeIndex == character.strokes.count){
+                stop()
+            }
+            else{
+                playCharacter()
+            }
         }
-        else{
-            playCharacter()
-        }
+    
  
        
     }
     
+    func reset(){
+        isPlaying = false
+        displayLink.paused = true
+        strokeIndex = 0
+        pointIndex = 0
+        setNeedsDisplay()
+    }
+    
     func play(){
-
         self.setNeedsDisplay()
-        
+    }
+    
+    func pause(){
+        displayLink.paused = true
+    }
+    func stop(){
+        displayLink.invalidate()
     }
     
     //填充汉字底色
@@ -123,7 +143,6 @@ class CharaterView: UIView {
         let xOffSet = Float((xLength)) / stepCount
         let yOffSet = Float((yLength)) / stepCount
         let maxStep = Int(stepCount)
-          debugPrint("\(l),\(stepCount),\(xOffSet),\(yOffSet)")
         return(maxStep,xOffSet,yOffSet,CGPoint(x: (curPoint["x"]?.toCGFloat())!,y: (curPoint["y"]?.toCGFloat())!))
     }
     
@@ -201,11 +220,21 @@ class CharaterView: UIView {
         if(isStrokeEnd()){
             strokeIndex = strokeIndex + 1
             pointIndex = 0
+            //一笔一画播放
+            if(playMode == PlayMode.OneStoke){
+                pause()
+            }
         }
  
+    }
+
+   
+    override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        if(displayLink.paused){
+            isPlaying = true
+            displayLink.paused = false
+        }
  
     }
     
-
-
 }

@@ -1,5 +1,5 @@
 //
-//  Charater.swift
+//  Character.swift
 //  Character
 //
 //  Created by 李雷川 on 16/7/15.
@@ -8,7 +8,7 @@
 
 import UIKit
 
-class Charater: NSObject {
+class  Character: NSObject {
     var unicode = ""
     var size = 512
     var strokes = [Stroke]()
