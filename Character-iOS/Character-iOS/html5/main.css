@@ -1,0 +1,110 @@
+body,ul,ol,li,p,h1,h2,h3,h4,h5,h6,form,fieldset,table,td,img,div,dl,dt,dd,
+			input {
+				margin: 0;
+				padding: 0;
+			}
+			body {
+				font-size: 12px;
+				background: #c6d5df;
+			}
+			img {
+				border: none;
+			}
+			li {
+				list-style: none;
+			}
+			input,
+			select,
+			textarea {
+				outline: none;
+				border: none;
+			}
+			textarea {
+				resize: none;
+				word-break: break-all;
+			}
+			a {
+				text-decoration: none;
+			}
+			#container {
+				width: 1024px;
+				margin: 0 auto;
+			}
+			#btnsline {
+				width: 982px;
+				height: 58px;
+				margin: 22px auto;
+				background: url(images/btnsbg.png) no-repeat;
+			}
+			#btnsline ul li {
+				width: 100px;
+				height: 26px;
+				background-position: left top;
+				float: left;
+				margin-top: 15px;
+				cursor: pointer;
+			}
+			#btnsline ul li:hover,
+			#btnsline ul li.clicked {
+				background-position: left bottom;
+			}
+			.btn1 {
+				margin-left: 42px;
+				background-image: url(images/btn1.png);
+			}
+			.btn2 {
+				margin-left: 102px;
+				background-image: url(images/btn2.png);
+			}
+			.btn3 {
+				width: 150px!important;
+				margin-left: 65px;
+				background-image: url(images/btn3.png);
+			}
+			.btn4 {
+				margin-left: 70px;
+				background-image: url(images/btn4.png);
+			}
+			.btn5 {
+				width: 125px!important;
+				margin-left: 80px;
+				background-image: url(images/btn5.png);
+			}
+			#container div{
+				float: left;
+				margin-top: 20px;
+			}
+			#canvasDiv {
+				width: 480px;
+				height: 480px;
+				background: #FFFFFF;
+				margin: 0 auto;
+			}
+			#strokes canvas+canvas {
+				margin-left: 5px;
+			}
+			#bgtype {
+				width: 117px;
+				height: 357px;
+				background: #FFFFFF;
+				position: fixed;
+				right: 0;
+				top: 100px;
+			}
+			#bgtype div {
+				width: 117px;
+				height: 117px;
+				cursor: pointer;
+			}
+			#bgtype div+div {
+				margin-top: 3px;
+			}
+			#tian {
+				background: url(images/bgtype.png) left top no-repeat;
+			}
+			#mi {
+				background: url(images/bgtype.png) left -120px no-repeat;
+			}
+			#picture {
+				background: url(images/bgtype.png) left bottom no-repeat;
+			}
