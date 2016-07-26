@@ -15,15 +15,6 @@ class MainViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = UIColor.whiteColor()
-        // Do any additional setup after loading the view, typically from a nib.
-        /*
-        for (index,stroke) in charater.strokes.enumerate() {
-            let strokeView = StrokeView(frame: CGRectMake(20,CGFloat(96 * index),96,96))
-            strokeView.stroke = stroke
-            view.addSubview(strokeView)
-        }
- */
-    
     }
     @IBOutlet weak var characterView: CharacterView!
 
@@ -60,6 +51,22 @@ class MainViewController: UIViewController {
         let character = Character()
         character.setValuesForKeysWithDictionary(json)
         characterView.character = character
+        
+        for index in 0..<characterView.character.strokes.count{
+            let strokeView = CharacterView(frame: CGRectMake(20,CGFloat(96 * index),96,96))
+            strokeView.character = characterView.character
+            view.addSubview(strokeView)
+            strokeView.showWithStoke(index)
+        }
+    }
+    
+    @IBAction func doShowStrokesAction(sender: AnyObject){
+        for index in 0..<characterView.character.strokes.count{
+            let strokeView = CharacterView(frame: CGRectMake(20,CGFloat(96 * index),96,96))
+            strokeView.character = characterView.character
+            view.addSubview(strokeView)
+            strokeView.fillWithStroke(index)
+        }
     }
 
 }

@@ -12,12 +12,18 @@ enum PlayMode:Int {
     case Auto = 0
     case OneStoke = 1
 }
+enum BackgroundMode:Int {
+    case None = 0
+    case Tian = 1
+    case Mi = 2
+    case Image = 3
+}
 
 class  CharacterView: UIView {
     var character:Character = Character(){
         didSet{
             debugPrint("didSet")
-            self.setNeedsDisplay()
+            self.reset()
         }
     }
     var strokeIndex = 0   //当前播放的笔画
@@ -28,18 +34,27 @@ class  CharacterView: UIView {
     var displayLink:CADisplayLink!
     var bOpenSmallStepMode = false
     var playMode = PlayMode.Auto
+    var backgroundMode = BackgroundMode.Tian
     var isPlaying = false
+    var isOnlyShowStroke = false
+    var borderWidth:CGFloat = 2
     override init(frame: CGRect) {
         super.init(frame: frame)
+        backgroundColor = UIColor.whiteColor()
+        displayLink = CADisplayLink(target: self, selector: #selector(CharacterView.play))
+        displayLink.addToRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
+        displayLink.paused = true
     }
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder:aDecoder)
         backgroundColor = UIColor.whiteColor()
-//        fatalError("init(coder:) has not been implemented")
         displayLink = CADisplayLink(target: self, selector: #selector(CharacterView.play))
         displayLink.addToRunLoop(NSRunLoop.currentRunLoop(), forMode: NSDefaultRunLoopMode)
         displayLink.paused = true
+    }
+    deinit{
+        displayLink.invalidate()
     }
     
     override func drawRect(rect: CGRect) {
@@ -49,23 +64,26 @@ class  CharacterView: UIView {
         if((self.cxt) == nil){
              self.cxt = UIGraphicsGetCurrentContext()
         }
+        drawBackground()
         CGContextScaleCTM(cxt, rect.size.width/CGFloat(character.size) ,  rect.size.height/CGFloat(character.size))
-    
         fillBackgroundCharacter()
         CGContextSaveGState(cxt)
-        if(isPlaying){
-            fillStoke(strokeIndex)
-            CGContextRestoreGState(cxt)
-            if(strokeIndex == character.strokes.count){
-                stop()
-            }
-            else{
-                playCharacter()
+        if(isOnlyShowStroke){
+            fillWithStroke(strokeIndex)
+        }
+        else{
+            if(isPlaying){
+                fillToStoke(strokeIndex)
+                CGContextRestoreGState(cxt)
+                if(strokeIndex == character.strokes.count){
+                    pause()
+                }
+                else{
+                    playCharacter()
+                }
             }
         }
-    
- 
-       
+   
     }
     
     func reset(){
@@ -83,8 +101,73 @@ class  CharacterView: UIView {
     func pause(){
         displayLink.paused = true
     }
-    func stop(){
-        displayLink.invalidate()
+    
+    func showWithStoke(index:Int){
+        strokeIndex = index
+        isOnlyShowStroke = true;
+        setNeedsDisplay()
+    }
+    
+    //填充笔画
+    func fillWithStroke(index:Int){
+        let stroke = character.strokes[index]
+        for rPoint in stroke.R{
+            if(rPoint["t"]?.toInt() == 0){
+                CGContextMoveToPoint(cxt,rPoint["x"]!.toCGFloat(), rPoint["y"]!.toCGFloat())
+            }
+            else if(rPoint["t"]?.toInt() == 1){
+                CGContextAddLineToPoint(cxt, rPoint["x"]!.toCGFloat(), rPoint["y"]!.toCGFloat())
+            }
+            else{
+                CGContextAddCurveToPoint(cxt, rPoint["cx1"]!.toCGFloat(), rPoint["cy1"]!.toCGFloat(),rPoint["cx2"]!.toCGFloat(), rPoint["cy2"]!.toCGFloat(),rPoint["x"]!.toCGFloat(), rPoint["y"]!.toCGFloat())
+            }
+        }
+        CGContextSetFillColorWithColor(cxt, UIColor.blackColor().CGColor)
+        CGContextFillPath(cxt)
+    }
+    
+
+    
+    func drawTian(){
+        let rect = bounds
+        CGContextSetRGBStrokeColor(cxt, 1, 0, 0, 1.0)
+        CGContextSetLineWidth(cxt, borderWidth)
+        //绘制边框
+        CGContextStrokeRect(cxt, bounds)
+        //设置画笔为虚线
+        CGContextSetLineDash(cxt, 0, [10,10], 1)
+        
+        //绘制+
+        CGContextMoveToPoint(cxt,rect.size.width/2,0)
+        CGContextAddLineToPoint(cxt,rect.size.width/2,rect.size.height)
+        CGContextMoveToPoint(cxt,0,rect.size.height/2)
+        CGContextAddLineToPoint(cxt,rect.size.width,rect.size.height/2)
+        CGContextStrokePath(cxt)
+    }
+    
+    func drawMi(){
+        drawTian()
+        let rect = bounds
+        //绘制交叉线
+        CGContextMoveToPoint(cxt,0,0)
+        CGContextAddLineToPoint(cxt,rect.size.width,rect.size.height)
+        CGContextMoveToPoint(cxt,rect.size.width,0)
+        CGContextAddLineToPoint(cxt,0,rect.size.height)
+        CGContextStrokePath(cxt)
+    }
+    
+    func drawBackground(){
+        switch backgroundMode {
+        case .None:
+            break
+        case .Tian:
+            drawTian()
+        case .Mi:
+            drawMi()
+            break
+        case .Image:
+            break
+        }
     }
     
     //填充汉字底色
@@ -112,23 +195,11 @@ class  CharacterView: UIView {
     }
     
     //填充已经播放笔画
-    func fillStoke(toIndex:Int){
+    func fillToStoke(toIndex:Int){
         for index in 0..<toIndex{
-            let stroke = character.strokes[index]
-            for rPoint in stroke.R{
-                if(rPoint["t"]?.toInt() == 0){
-                    CGContextMoveToPoint(cxt,rPoint["x"]!.toCGFloat(), rPoint["y"]!.toCGFloat())
-                }
-                else if(rPoint["t"]?.toInt() == 1){
-                    CGContextAddLineToPoint(cxt, rPoint["x"]!.toCGFloat(), rPoint["y"]!.toCGFloat())
-                }
-                else{
-                    CGContextAddCurveToPoint(cxt, rPoint["cx1"]!.toCGFloat(), rPoint["cy1"]!.toCGFloat(),rPoint["cx2"]!.toCGFloat(), rPoint["cy2"]!.toCGFloat(),rPoint["x"]!.toCGFloat(), rPoint["y"]!.toCGFloat())
-                }
-            }
+            fillWithStroke(index)
         }
-        CGContextSetFillColorWithColor(cxt, UIColor.blackColor().CGColor)
-        CGContextFillPath(cxt)
+     
     }
     
     
@@ -210,7 +281,7 @@ class  CharacterView: UIView {
     func playCharacter(){
         
         clipStrokeFrame()
-        
+        CGContextSetRGBStrokeColor(cxt, 0, 0, 0, 1.0)
         CGContextSetLineWidth(cxt, 55)
         CGContextSetLineCap(cxt, .Round)
         CGContextSetLineJoin(cxt,.Round)

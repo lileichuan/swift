@@ -26,11 +26,11 @@
             ignoreCount = "0"
             continueAfterRunningActions = "No"
             filePath = "Character/CharacterView.swift"
-            timestampString = "491212835.48254"
+            timestampString = "491220069.294086"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "49"
-            endingLineNumber = "49"
+            startingLineNumber = "64"
+            endingLineNumber = "64"
             landmarkName = "drawRect(_:)"
             landmarkType = "5">
          </BreakpointContent>
