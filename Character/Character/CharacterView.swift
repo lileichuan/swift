@@ -34,7 +34,7 @@ class  CharacterView: UIView {
     var displayLink:CADisplayLink!
     var bOpenSmallStepMode = false
     var playMode = PlayMode.Auto
-    var backgroundMode = BackgroundMode.Tian
+    var backgroundMode = BackgroundMode.None
     var isPlaying = false
     var isOnlyShowStroke = false
     var borderWidth:CGFloat = 2
@@ -102,7 +102,7 @@ class  CharacterView: UIView {
         displayLink.paused = true
     }
     
-    func showWithStoke(index:Int){
+    func showWithStroke(index:Int){
         strokeIndex = index
         isOnlyShowStroke = true;
         setNeedsDisplay()
@@ -156,6 +156,11 @@ class  CharacterView: UIView {
         CGContextStrokePath(cxt)
     }
     
+    func drawImage(){
+        let rect = bounds
+        let image =  UIImage.init(named: "background.jpg")?.CGImage
+        CGContextDrawImage(cxt, rect,image)
+    }
     func drawBackground(){
         switch backgroundMode {
         case .None:
@@ -164,9 +169,8 @@ class  CharacterView: UIView {
             drawTian()
         case .Mi:
             drawMi()
-            break
         case .Image:
-            break
+            drawImage()
         }
     }
     
@@ -282,7 +286,7 @@ class  CharacterView: UIView {
         
         clipStrokeFrame()
         CGContextSetRGBStrokeColor(cxt, 0, 0, 0, 1.0)
-        CGContextSetLineWidth(cxt, 55)
+        CGContextSetLineWidth(cxt, 70)
         CGContextSetLineCap(cxt, .Round)
         CGContextSetLineJoin(cxt,.Round)
         drawStroke()
@@ -301,6 +305,9 @@ class  CharacterView: UIView {
 
    
     override func touchesEnded(touches: Set<UITouch>, withEvent event: UIEvent?) {
+        guard isOnlyShowStroke == false else{
+            return
+        }
         if(displayLink.paused){
             isPlaying = true
             displayLink.paused = false

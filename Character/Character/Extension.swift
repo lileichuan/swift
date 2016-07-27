@@ -84,9 +84,34 @@ extension String{
     func stringToInt() ->String{
         return String(lroundf(self.toFloat()))
     }
+    func toUnicode()->String{
+        let length = self.length
+        let s = NSMutableString(capacity: 0)
+        let string = self as NSString
+        for i in 0..<length {
+           let  _char = string.characterAtIndex(i)
+            //判断是否为英文和数字
+            if (_char <= 9 && _char >= 0) {
+                s.appendFormat("%@",string.substringWithRange(NSRange(location: i,length: 1)))
+            }else if(_char >= 97 && _char <= 122)
+            {
+                 s.appendFormat("%@",string.substringWithRange(NSRange(location: i,length: 1)))
+            }else if(_char >= 65 && _char <= 90)
+            {
+                 s.appendFormat("%@",string.substringWithRange(NSRange(location: i,length: 1)))
+            }else
+            {
+                 s.appendFormat("%x",_char)
+            }
+            
+        }
+        return s as String;
+    }
 	func toUTF8String() -> UnsafePointer<Int8> {
 		return (self as NSString).UTF8String
 	}
+    
+    
 	static func utf8StringFromData(data: NSData) -> String {
 		return String(NSString(data: data, encoding: NSUTF8StringEncoding))
 	}

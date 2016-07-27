@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		6007D2F01D485E8F00F8F824 /* background.jpg in Resources */ = {isa = PBXBuildFile; fileRef = 6007D2EF1D485E8F00F8F824 /* background.jpg */; };
+		6007D8861D48A9AC00F8F824 /* characters.json in Resources */ = {isa = PBXBuildFile; fileRef = 6007D8851D48A9AC00F8F824 /* characters.json */; };
 		603A65241D4743110050FBC1 /* Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 603A65231D4743110050FBC1 /* Extension.swift */; };
 		60CB3A031D388B8300AF3A5A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CB3A021D388B8300AF3A5A /* AppDelegate.swift */; };
 		60CB3A051D388B8300AF3A5A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 60CB3A041D388B8300AF3A5A /* ViewController.swift */; };
@@ -39,6 +41,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		6007D2EF1D485E8F00F8F824 /* background.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; name = background.jpg; path = ../../../../background.jpg; sourceTree = "<group>"; };
+		6007D8851D48A9AC00F8F824 /* characters.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = characters.json; sourceTree = "<group>"; };
 		603A65231D4743110050FBC1 /* Extension.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Extension.swift; sourceTree = "<group>"; };
 		60CB39FF1D388B8300AF3A5A /* Character.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Character.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		60CB3A021D388B8300AF3A5A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -118,6 +122,8 @@
 				60CB3A301D388E0300AF3A5A /* CharacterView.swift */,
 				60CB3A361D38F5BA00AF3A5A /* StrokeView.swift */,
 				60CB3A341D38CE2100AF3A5A /* data.json */,
+				6007D8851D48A9AC00F8F824 /* characters.json */,
+				6007D2EF1D485E8F00F8F824 /* background.jpg */,
 			);
 			path = Character;
 			sourceTree = "<group>";
@@ -245,6 +251,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				60CB3A0D1D388B8300AF3A5A /* LaunchScreen.storyboard in Resources */,
+				6007D2F01D485E8F00F8F824 /* background.jpg in Resources */,
+				6007D8861D48A9AC00F8F824 /* characters.json in Resources */,
 				60CB3A0A1D388B8300AF3A5A /* Assets.xcassets in Resources */,
 				60CB3A081D388B8300AF3A5A /* Main.storyboard in Resources */,
 				60CB3A351D38CE2100AF3A5A /* data.json in Resources */,
