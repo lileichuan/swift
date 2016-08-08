@@ -49,6 +49,7 @@ class MainViewController: UIViewController {
         requestCharacterJson(characterTextField.text!.toUnicode())
         characterFlagLabel.text = "\(characterIndex+1)/\(characters.count)"
     }
+    
     @IBOutlet weak var characterView: CharacterView!
 
     
@@ -103,7 +104,7 @@ class MainViewController: UIViewController {
     @IBAction func doShowStrokesAction(){
 //        strokesContainerView.hidden = strokesContainerView.hidden
       
-        for index in 0..<characterView.character.strokes.count{
+        for index in 0..<characterView.character.points.count{
             let strokeView = CharacterView(frame: CGRectMake(64*CGFloat(index),10,64,64))
             strokeView.translatesAutoresizingMaskIntoConstraints = false
             strokesContainerView.addSubview(strokeView)

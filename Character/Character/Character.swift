@@ -8,31 +8,45 @@
 
 import UIKit
 
+class Point: NSObject {
+    var T = [[String:String]]()
+    var R = [[String:String]]()
+    var stroke = Stroke()
+}
+class Atrribute: NSObject {
+
+}
+class Stroke: NSObject {
+    var id = 0
+    var name = ""
+}
+
 class  Character: NSObject {
     var unicode = ""
     var size = 512
-    var strokes = [Stroke]()
+    var points = [Point]()
+    
+    
+    override func setValue(value: AnyObject?, forKey key: String) {
+        if(key == "points"){
+            for item in value as! [[String:AnyObject]]{
+                let point = Point()
+                for r in item["R"] as! [[String:String]]{
+                    point.R.append(r)
+                }
+                for t in item["T"] as! [[String:String]]{
+                    point.T.append(t)
+                }
+                self.points.append(point)
+                
+            }
+            
+        }
+    }
     
     override func setValue(value: AnyObject?, forUndefinedKey key: String) {
         debugPrint("forUndefinedKey \(key)")
-        if(key == "points"){
-            for item in value as! [[String:AnyObject]]{
-                let stroke = Stroke()
-                for r in item["R"] as! [[String:String]]{
-                    stroke.R.append(r)
-                }
-                for t in item["T"] as! [[String:String]]{
-                    stroke.T.append(t)
-                }
-                self.strokes.append(stroke)
-                
-            }
-        
-        }
+   
     }
 }
 
-class Stroke: NSObject {
-    var T = [[String:String]]()
-    var R = [[String:String]]()
-}

@@ -107,6 +107,7 @@ extension String{
         }
         return s as String;
     }
+    
 	func toUTF8String() -> UnsafePointer<Int8> {
 		return (self as NSString).UTF8String
 	}
